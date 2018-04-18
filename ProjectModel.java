@@ -23,6 +23,12 @@ public class ProjectModel {
 		this.tasks = pm.tasks;
 	}
 
+	public ProjectModel() {
+		this.name = "";
+		this.cols = new ArrayList<String>();
+		this.tasks = new ArrayList<TaskModel>();
+	}
+
 	public void addTask(TaskModel task) {
 		tasks.add(task);
 	}
@@ -43,6 +49,26 @@ public class ProjectModel {
 
 	public List<TaskModel> getTasks() {
 		return tasks;
+	}
+
+	public static int getInstances() {
+		return instances;
+	}
+
+	public static void setInstances(int instances) {
+		ProjectModel.instances = instances;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setCols(List<String> cols) {
+		this.cols = cols;
+	}
+
+	public void setTasks(List<TaskModel> tasks) {
+		this.tasks = tasks;
 	}
 
 	public String toString() {

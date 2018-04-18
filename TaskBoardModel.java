@@ -12,8 +12,7 @@ public class TaskBoardModel extends JPanel {
 	public TaskBoardModel() {
 		this.name = "";
 		projects = new ArrayList<ProjectModel>();
-		fileName = null;
-		active = null;
+		fileName = "";
 	}
 
 	public TaskBoardModel(TaskBoardModel tb) {
@@ -21,6 +20,15 @@ public class TaskBoardModel extends JPanel {
 		projects = tb.projects;
 		fileName = tb.fileName;
 		active = tb.active;
+	}
+
+	public TaskBoardModel(ArrayList<Object> list) {
+		int i = 0;
+		name = (String) list.get(i++);
+		projects = (List<ProjectModel>) list.get(i++);
+		fileName = (String) list.get(i++);
+		active = (ProjectModel) list.get(i++);
+
 	}
 
 	public void addProject(ProjectModel project) {
@@ -55,6 +63,22 @@ public class TaskBoardModel extends JPanel {
 
 	public ProjectModel getActive() {
 		return active;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setProjects(List<ProjectModel> projects) {
+		this.projects = projects;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public void setActive(ProjectModel active) {
+		this.active = active;
 	}
 
 	public String toString() {

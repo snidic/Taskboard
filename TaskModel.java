@@ -27,6 +27,13 @@ public class TaskModel implements Comparable {
 		this.status = tm.status;
 	}
 
+	public TaskModel() {
+		this.name = "";
+		this.desc = "";
+		this.due = "";
+		this.status = "";
+	}
+
 	@Override
 	public int compareTo(Object o) {
 		TaskModel other = (TaskModel) o;
@@ -47,6 +54,30 @@ public class TaskModel implements Comparable {
 
 	public String getStatus() {
 		return status;
+	}
+
+	public static int getInstances() {
+		return instances;
+	}
+
+	public static void setInstances(int instances) {
+		TaskModel.instances = instances;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+	public void setDue(String due) {
+		this.due = due;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String toString() {
