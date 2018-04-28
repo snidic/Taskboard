@@ -3,11 +3,11 @@ import java.util.Date;
 public class TaskModel implements Comparable {
 	private String name;
 	private String desc;
-	private String due;
+	private Date due;
 	private String status;
 	private static int instances = 1;
 
-	public TaskModel(String name, String desc, String due, Object status) {
+	public TaskModel(String name, String desc, Date due, Object status) {
 		if ("".equals(name))
 			this.name = "task" + instances++;
 		else
@@ -30,7 +30,7 @@ public class TaskModel implements Comparable {
 	public TaskModel() {
 		this.name = "";
 		this.desc = "";
-		this.due = "";
+		this.due = null;
 		this.status = "";
 	}
 
@@ -48,7 +48,7 @@ public class TaskModel implements Comparable {
 		return desc;
 	}
 
-	public String getDue() {
+	public Date getDue() {
 		return due;
 	}
 
@@ -72,7 +72,7 @@ public class TaskModel implements Comparable {
 		this.desc = desc;
 	}
 
-	public void setDue(String due) {
+	public void setDue(Date due) {
 		this.due = due;
 	}
 

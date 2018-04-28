@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.*;
 
@@ -115,6 +116,7 @@ public class MainScreen extends JFrame {
 	public static void main(String[] args) {
 		MainScreen ms = new MainScreen();
 		ms.showScreen();
+		//CalendarView.showPicker();
 	}
 
 }

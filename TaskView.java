@@ -1,5 +1,6 @@
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -15,7 +16,8 @@ public class TaskView extends JDialog {
 	private JTextField name;
 	private JTextField desc;
 	private JComboBox col;
-	private JTextField due;
+	private String due;
+	private Date date;
 	private JPanel nameNav;
 	private JPanel descNav;
 	private JPanel colNav;
@@ -26,9 +28,8 @@ public class TaskView extends JDialog {
 	public TaskView(ProjectModel pr) {
 		name = new JTextField(10);
 		desc = new JTextField(20);
-		System.out.println(pr == null);
 		col = new JComboBox(pr.getCols().toArray());
-		due = new JTextField(10);
+		due = "";
 		nameNav = new JPanel();
 		descNav = new JPanel();
 		colNav = new JPanel();
@@ -51,8 +52,8 @@ public class TaskView extends JDialog {
 		desc = new JTextField(20);
 		desc.setText(ts.getDesc());
 		col = new JComboBox(pr.getCols().toArray());
-		due = new JTextField(10);
-		due.setText(ts.getDue().toString());
+		due = "";
+		due = ts.getDue().toString();
 		nameNav = new JPanel();
 		descNav = new JPanel();
 		colNav = new JPanel();
@@ -83,13 +84,12 @@ public class TaskView extends JDialog {
 		colNav.add(new JLabel("Status:"));
 		colNav.add(col);
 
-		dueNav.add(new JLabel("Due Date:"));
-		dueNav.add(due);
+		updateDueNav();
 
 		// Confirmation Component
 		JButton accept = new JButton("Create");
 		accept.addActionListener((event) -> {
-			target = new TaskModel(name.getText(), desc.getText(), due.getText(), col.getSelectedItem());
+			target = new TaskModel(name.getText(), desc.getText(), date, col.getSelectedItem());
 			this.dispose();
 		});
 		JButton cancel = new JButton("Cancel");
@@ -98,6 +98,26 @@ public class TaskView extends JDialog {
 		});
 		confirmNav.add(accept);
 		confirmNav.add(cancel);
+	}
+
+	private void updateDueNav() {
+		dueNav.removeAll();
+
+		dueNav.add(new JLabel("Due Date:"));
+		JButton datePicker = new JButton("PICK");
+		datePicker.addActionListener((event) -> {
+			date = CalendarView.showPicker();
+			updateDueNav();
+			this.pack();
+			this.revalidate();
+			this.repaint();
+		});
+		dueNav.add(datePicker);
+		if (date != null)
+			due = date.toString();
+		else
+			due = "";
+		dueNav.add(new JLabel(due));
 	}
 
 	private void addComponents() {
