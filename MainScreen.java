@@ -12,44 +12,89 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 
 public class MainScreen extends JFrame {
 	JFrame frame = new JFrame("Taskboard");
 	JPanel topNav = new JPanel(new FlowLayout());
+	JMenuBar menuBar = new JMenuBar();
 	TaskBoardModel board = new TaskBoardModel();
 
-	public void showScreen() {
-		JButton taskLoad = new JButton("Load Taskboard");
-		taskLoad.addActionListener((event) -> {
-			String file = JOptionPane.showInputDialog("Load Filename");
-			if (file != null) {
-				TaskBoardModel opened = openXML(file);
-				board = (opened != null) ? opened : board;
+	private void showMenuBar() {
+		// File Section
+		JMenu menu = new JMenu("File");
+		menuBar.add(menu);
 
-			}
+		JMenuItem menuItem = new JMenuItem("New");
+		menuItem.addActionListener((event) -> {
+			board = new TaskBoardModel();
 		});
+		menu.add(menuItem);
 
-		JButton taskSave = new JButton("Save Taskboard");
-		taskSave.addActionListener((event) -> {
-			String file = JOptionPane.showInputDialog("Save Filename");
-			if (file != null) {
-				saveXML(file);
-			}
+		menuItem = new JMenuItem("Open");
+		menuItem.addActionListener((event) -> {
+			// String file = JOptionPane.showInputDialog("Load Filename");
+			// if (file != null) {
+			// TaskBoardModel opened = openXML(file);
+			// board = (opened != null) ? opened : board;
+			//
+			// }
+			open();
 		});
+		menu.add(menuItem);
 
-		JButton projAdd = new JButton("Create \nProject");
-		projAdd.addActionListener((event) -> {
+		menuItem = new JMenuItem("Save");
+		menuItem.addActionListener((event) -> {
+			save();
+		});
+		menu.add(menuItem);
+
+		menuItem = new JMenuItem("Save as...");
+		menuItem.addActionListener((event) -> {
+			saveAs();
+		});
+		menu.add(menuItem);
+
+		menuItem = new JMenuItem("Exit");
+		menuItem.getAccessibleContext().setAccessibleDescription("desc");
+		menuItem.addActionListener((event) -> {
+			LoginView.showLoginDialog();
+		});
+		;
+		menu.add(menuItem);
+
+		// Project Section
+		menu = new JMenu("Project");
+		menuBar.add(menu);
+
+		menuItem = new JMenuItem("Create Project");
+		menuItem.getAccessibleContext().setAccessibleDescription("Makes a project");
+		menuItem.addActionListener((event) -> {
 			ProjectModel p = ProjectView.showCreateDialog(board);
 			// TODO: Add the project to the TaskBoardModel
 			board.addProject(p);
 			System.out.println(p);
 		});
-		JButton taskAdd = new JButton("Create \nTask");
-		taskAdd.addActionListener((event) -> {
+		menu.add(menuItem);
+
+		menuItem = new JMenuItem("Load Project");
+		menuItem.getAccessibleContext().setAccessibleDescription("Makes a project");
+		menu.add(menuItem);
+
+		menuItem = new JMenuItem("Edit Project");
+		menuItem.getAccessibleContext().setAccessibleDescription("Edit a project");
+		menu.add(menuItem);
+
+		// Task Section
+		menu = new JMenu("Task");
+		menuBar.add(menu);
+		menuItem = new JMenuItem("Create Task");
+		menuItem.addActionListener((event) -> {
 			if (board.getActive() == null) {
 				JOptionPane.showMessageDialog(null, "Create a Project First");
 			} else {
@@ -59,25 +104,22 @@ public class MainScreen extends JFrame {
 				System.out.println(t);
 			}
 		});
-		JButton logout = new JButton("Logout");
-		logout.addActionListener((event) -> {
-			LoginView.showLoginDialog();
-		});
+		menu.add(menuItem);
 
-		// TO BE DELETED
-		JButton print = new JButton("PRINT TASKBOARD");
-		print.addActionListener((event) -> {
+		menu = new JMenu("DEBUG");
+		menuBar.add(menu);
+		menuItem = new JMenuItem("Print Taskboard");
+		menuItem.addActionListener((event) -> {
 			System.out.println(board);
 		});
+		menu.add(menuItem);
 
-		topNav.add(taskSave);
-		topNav.add(taskLoad);
-		topNav.add(taskAdd);
-		topNav.add(projAdd);
-		topNav.add(logout);
-		topNav.add(print);
+		frame.setJMenuBar(menuBar);
+	}
 
-		frame.add(topNav);
+	public void showScreen() {
+		showMenuBar();
+
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
@@ -85,7 +127,42 @@ public class MainScreen extends JFrame {
 		LoginView.showLoginDialog();
 	}
 
-	public TaskBoardModel openXML(String file) {
+	private void open() {
+		JFileChooser fc = new JFileChooser(".");
+		fc.addChoosableFileFilter(new XMLFilter());
+		fc.setAcceptAllFileFilterUsed(false);
+
+		int ret = fc.showOpenDialog(this);
+		if (ret == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			board = openXML(file);
+		}
+	}
+
+	private void save() {
+		if ("".equals(board.getFileName())) {
+
+		} else
+			saveAs();
+	}
+
+	private void saveAs() {
+		JFileChooser fc = new JFileChooser(".");
+		fc.addChoosableFileFilter(new XMLFilter());
+		fc.setAcceptAllFileFilterUsed(false);
+
+		int ret = fc.showSaveDialog(this);
+		if (ret == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			if (!file.getName().contains(".xml")) {
+				String ext = file.getAbsolutePath() + ".xml";
+				file = new File(ext);
+			}
+			saveXML(file);
+		}
+	}
+
+	private TaskBoardModel openXML(File file) {
 		try {
 			// TODO: Load File
 			XMLDecoder xmlIn = new XMLDecoder(new BufferedInputStream(new FileInputStream(file)));
@@ -100,9 +177,10 @@ public class MainScreen extends JFrame {
 		return null;
 	}
 
-	public void saveXML(String file) {
+	private void saveXML(File file) {
 		try {
 			// TODO: Save File
+			file.renameTo(new File(file.getName() + ".xml"));
 			XMLEncoder xmlOut = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(file)));
 			xmlOut.writeObject(board);
 			xmlOut.close();
@@ -116,7 +194,34 @@ public class MainScreen extends JFrame {
 	public static void main(String[] args) {
 		MainScreen ms = new MainScreen();
 		ms.showScreen();
-		//CalendarView.showPicker();
+		// CalendarView.showPicker();
+	}
+
+	private class XMLFilter extends FileFilter {
+
+		@Override
+		public boolean accept(File f) {
+			if (f.isDirectory())
+				return true;
+
+			String extension = f.getName();
+
+			int dot = extension.lastIndexOf(".");
+			if (dot >= 0)
+				extension = extension.substring(dot);
+
+			if (extension != null)
+				if (extension.equals(".xml"))
+					return true;
+
+			return false;
+		}
+
+		@Override
+		public String getDescription() {
+			return "XML Only";
+		}
+
 	}
 
 }

@@ -9,7 +9,7 @@ public class ProjectModel {
 
 	public ProjectModel(String name, ArrayList<String> cols) {
 		if ("".equals(name))
-			this.name = "project" + instances++;
+			this.name = "project" + instances+1;
 		else
 			this.name = name;
 		this.cols = new ArrayList<String>(cols);
@@ -72,7 +72,7 @@ public class ProjectModel {
 	}
 
 	public String toString() {
-		return this.getClass().getName() + "[Name: " + name + ", Cols: " + cols.toString() + ", Tasks:"
+		return this.getClass().getName() + "[Name: " + name + ",\n\tCols: " + cols.toString() + ",\n\tTasks:"
 				+ tasks.toString() + "]";
 	}
 }

@@ -26,6 +26,9 @@ public class CalendarView extends JDialog {
 		dateNav = new JPanel();
 		confirmNav = new JPanel();
 		c = Calendar.getInstance();
+		c.set(Calendar.HOUR, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
 
 		GridLayout dateLayout = new GridLayout(0, 7);
 		dateLayout.setHgap(5);
@@ -105,6 +108,9 @@ public class CalendarView extends JDialog {
 
 			date.addActionListener((event) -> {
 				Date temp = fill.getTime();
+				temp.setHours(0);
+				temp.setMinutes(0);
+				temp.setSeconds(0);
 				target = temp;
 			});
 			dateNav.add(date);
