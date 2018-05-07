@@ -43,7 +43,7 @@ public class TaskView extends JDialog {
 		this.setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		this.setResizable(false);
 		this.setModal(true);
-		this.setTitle("Edit a Project");
+		this.setTitle("Create a Task");
 	}
 
 	public TaskView(ProjectModel pr, TaskModel ts) {
@@ -68,7 +68,7 @@ public class TaskView extends JDialog {
 		this.setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		this.setResizable(false);
 		this.setModal(true);
-		this.setTitle("Edit a Project");
+		this.setTitle("Edit a Task");
 	}
 
 	private void createComponents() {
@@ -89,6 +89,8 @@ public class TaskView extends JDialog {
 		// Confirmation Component
 		JButton accept = new JButton("Create");
 		accept.addActionListener((event) -> {
+			if (date == null)
+				date = CalendarView.ENDLESS;
 			target = new TaskModel(name.getText(), desc.getText(), date, col.getSelectedItem());
 			this.dispose();
 		});

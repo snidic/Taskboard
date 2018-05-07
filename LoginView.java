@@ -38,6 +38,15 @@ public class LoginView extends JDialog {
 		// Error component
 		errorNav.add(new JLabel(" "));
 
+		WindowAdapter adapt = new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				System.exit(0);
+			}
+		};
+
+		addWindowListener(adapt);
+
 		// Confirmation component
 		JButton confirm = new JButton("Login");
 		confirm.addActionListener((event) -> {
@@ -48,6 +57,7 @@ public class LoginView extends JDialog {
 				this.revalidate();
 				this.repaint();
 			} else {
+				removeWindowListener(adapt);
 				this.dispose();
 			}
 		});

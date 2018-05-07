@@ -29,6 +29,7 @@ public class ProjectView extends JDialog {
 		for (String col : pr.getCols()) {
 			JTextField colField = new JTextField(10);
 			colField.setText(col);
+			cols.add(colField);
 		}
 		nameNav = new JPanel();
 		addNav = new JPanel();
@@ -37,7 +38,7 @@ public class ProjectView extends JDialog {
 		errorNav = new JPanel();
 		target = pr;
 		board = tb;
-		GridLayout botLayout = new GridLayout(0, 2);
+		GridLayout botLayout = new GridLayout(0, 4);
 		botLayout.setHgap(5);
 		botLayout.setVgap(5);
 		colNav.setLayout(botLayout);
@@ -58,7 +59,7 @@ public class ProjectView extends JDialog {
 		confirmNav = new JPanel();
 		errorNav = new JPanel();
 		board = tb;
-		GridLayout botLayout = new GridLayout(0, 2);
+		GridLayout botLayout = new GridLayout(0, 4);
 		botLayout.setHgap(5);
 		botLayout.setVgap(5);
 		colNav.setLayout(botLayout);
@@ -141,10 +142,10 @@ public class ProjectView extends JDialog {
 		// Add all columns
 		for (JTextField field : cols) {
 			colNav.add(field);
+			int ind = cols.indexOf(field);
 			// Add a remove button along with each column
 			JButton b = new JButton("-");
 			b.addActionListener((event) -> {
-				int ind = cols.indexOf(field);
 				cols.remove(ind);
 				updateCols();
 				this.pack();
@@ -152,7 +153,45 @@ public class ProjectView extends JDialog {
 				this.repaint();
 			});
 			colNav.add(b);
+
+			/// Swapping columns ///
+			// Move up column
+			if (ind > 0 && ind <= cols.size() - 1) {
+				b = new JButton("^");
+				b.addActionListener((event) -> {
+					swapCols(ind, -1);
+					updateCols();
+					this.pack();
+					this.revalidate();
+					this.repaint();
+				});
+				colNav.add(b);
+			} else {
+				JLabel l = new JLabel();
+				colNav.add(l);
+			}
+			// Move down column
+			if (ind < cols.size() - 1 && ind >= 0) {
+				b = new JButton("v");
+				b.addActionListener((event) -> {
+					swapCols(ind, 1);
+					updateCols();
+					this.pack();
+					this.revalidate();
+					this.repaint();
+				});
+				colNav.add(b);
+			} else {
+				JLabel l = new JLabel();
+				colNav.add(l);
+			}
 		}
+	}
+
+	private void swapCols(int ind, int dir) {
+		JTextField temp = cols.get(ind);
+		cols.set(ind, cols.get(ind + dir));
+		cols.set(ind + dir, temp);
 	}
 
 	/**

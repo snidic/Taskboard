@@ -17,14 +17,16 @@ public class CalendarView extends JDialog {
 	private JPanel monthNav;
 	private JPanel dateNav;
 	private JPanel confirmNav;
+	JLabel targetDate;
 	private Calendar c;
 	private Date target;
+	public static final Date ENDLESS = new Date(Long.MAX_VALUE);
 
 	public CalendarView() {
-
 		monthNav = new JPanel();
 		dateNav = new JPanel();
 		confirmNav = new JPanel();
+		targetDate = new JLabel();
 		c = Calendar.getInstance();
 		c.set(Calendar.HOUR, 0);
 		c.set(Calendar.MINUTE, 0);
@@ -42,24 +44,7 @@ public class CalendarView extends JDialog {
 
 	private void createComponents() {
 		updateDate();
-
-		// Confirmation Component
-		JButton accept = new JButton("Create");
-		accept.addActionListener((event) -> {
-			this.dispose();
-		});
-		JButton cancel = new JButton("Cancel");
-		cancel.addActionListener((event) -> {
-			target = null;
-			this.dispose();
-		});
-		String str = "";
-		if (target != null)
-			str = target.toString();
-		JLabel targetDate = new JLabel(str);
-		confirmNav.add(accept);
-		confirmNav.add(cancel);
-		confirmNav.add(targetDate);
+		updateConfirm();
 	}
 
 	private void updateDate() {
@@ -89,6 +74,13 @@ public class CalendarView extends JDialog {
 		monthNav.add(next);
 
 		// Date Component
+		dateNav.add(new JLabel("S"));
+		dateNav.add(new JLabel("M"));
+		dateNav.add(new JLabel("T"));
+		dateNav.add(new JLabel("W"));
+		dateNav.add(new JLabel("T"));
+		dateNav.add(new JLabel("F"));
+		dateNav.add(new JLabel("S"));
 
 		// Date offset
 		Calendar cal = Calendar.getInstance();
@@ -112,10 +104,36 @@ public class CalendarView extends JDialog {
 				temp.setMinutes(0);
 				temp.setSeconds(0);
 				target = temp;
+				updateConfirm();
+				this.pack();
+				this.revalidate();
+				this.repaint();
 			});
 			dateNav.add(date);
 		}
+	}
 
+	private void updateConfirm() {
+		confirmNav.removeAll();
+		// Confirmation Component
+		JButton accept = new JButton("Create");
+		accept.addActionListener((event) -> {
+			this.dispose();
+		});
+		JButton cancel = new JButton("Cancel");
+		cancel.addActionListener((event) -> {
+			target = null;
+			this.dispose();
+		});
+
+		String str = "";
+		if (target != null)
+			str = target.toString();
+		JLabel targetDate = new JLabel(str);
+
+		confirmNav.add(accept);
+		confirmNav.add(targetDate);
+		confirmNav.add(cancel);
 	}
 
 	private String intMonthToString(int month) {

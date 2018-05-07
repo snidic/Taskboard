@@ -29,6 +29,13 @@ public class TaskBoardModel extends JPanel {
 
 	}
 
+	public ProjectModel getProject(String name) {
+		for (ProjectModel p : projects)
+			if (p.getName().equals(name))
+				return p;
+		return null;
+	}
+
 	public void addTaskToActive(TaskModel task) {
 		active.addTask(task);
 	}
@@ -73,7 +80,7 @@ public class TaskBoardModel extends JPanel {
 	}
 
 	public String toString() {
-		return this.getClass().getName() + "[Name: " + name + ",\n\tProjects: " + projects.toString() + ",\n\tFilename: "
-				+ fileName + ",\n\tActive: " + active + "]";
+		return this.getClass().getName() + "[Name: " + name + ",\n\tProjects: " + projects.toString()
+				+ ",\n\tFilename: " + fileName + ",\n\tActive: " + active + "]";
 	}
 }

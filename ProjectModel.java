@@ -70,6 +70,12 @@ public class ProjectModel {
 	public void setTasks(List<TaskModel> tasks) {
 		this.tasks = tasks;
 	}
+	
+	public void setAs(ProjectModel pm) {
+		this.name = pm.name;
+		this.cols = pm.cols;
+		this.tasks = pm.tasks;
+	}
 
 	public String toString() {
 		return this.getClass().getName() + "[Name: " + name + ",\n\tCols: " + cols.toString() + ",\n\tTasks:"

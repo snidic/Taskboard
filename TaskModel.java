@@ -80,6 +80,13 @@ public class TaskModel implements Comparable {
 		this.status = status;
 	}
 
+	public void setAs(TaskModel tm) {
+		this.name = tm.name;
+		this.desc = tm.desc;
+		this.due = tm.due;
+		this.status = tm.status;
+	}
+
 	public String toString() {
 		return this.getClass().getName() + "[Name: " + name + " , Desc: " + desc + ", Due: " + due.toString()
 				+ ", Status: " + status + "]";
