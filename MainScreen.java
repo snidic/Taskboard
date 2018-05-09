@@ -21,10 +21,11 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
 public class MainScreen extends JFrame {
-	JFrame frame = new JFrame("Taskboard");
+	JFrame frame = new JFrame("Untitled");
 	JPanel topNav = new JPanel(new FlowLayout());
 	JMenuBar menuBar = new JMenuBar();
 	TaskBoardModel board = new TaskBoardModel();
+	boolean unsaved = false;
 
 	/**
 	 * Shows the top menu bar {File, Project, Task, etc...}
@@ -37,14 +38,22 @@ public class MainScreen extends JFrame {
 		// Creates a new TaskBoardModel
 		JMenuItem menuItem = new JMenuItem("New");
 		menuItem.addActionListener((event) -> {
-			board = new TaskBoardModel();
+			boolean cont = true;
+			if (unsaved)
+				cont = savePrompt();
+			if (cont)
+				newTaskBoard();
 		});
 		menu.add(menuItem);
 
 		// Opens a TaskBoardModel from a xml file
 		menuItem = new JMenuItem("Open");
 		menuItem.addActionListener((event) -> {
-			open();
+			boolean cont = true;
+			if (unsaved)
+				cont = savePrompt();
+			if (cont)
+				open();
 		});
 		menu.add(menuItem);
 
@@ -67,7 +76,13 @@ public class MainScreen extends JFrame {
 		menuItem = new JMenuItem("Exit");
 		menuItem.getAccessibleContext().setAccessibleDescription("desc");
 		menuItem.addActionListener((event) -> {
-			LoginView.showLoginDialog();
+			boolean cont = true;
+			if (unsaved)
+				cont = savePrompt();
+			if (cont) {
+				newTaskBoard();
+				LoginView.showLoginDialog();
+			}
 		});
 		;
 		menu.add(menuItem);
@@ -80,8 +95,7 @@ public class MainScreen extends JFrame {
 		menuItem = new JMenuItem("Create Project");
 		menuItem.getAccessibleContext().setAccessibleDescription("Makes a project");
 		menuItem.addActionListener((event) -> {
-			ProjectModel p = ProjectView.showCreateDialog(board);
-			board.addProject(p);
+			createProject();
 		});
 		menu.add(menuItem);
 
@@ -89,20 +103,7 @@ public class MainScreen extends JFrame {
 		menuItem = new JMenuItem("Load Project");
 		menuItem.getAccessibleContext().setAccessibleDescription("Loads a project");
 		menuItem.addActionListener((event) -> {
-
-			Object[] choices = board.getProjects().toArray();
-			if (choices.length > 0) {
-				ProjectModel p = (ProjectModel) JOptionPane.showInputDialog(this, "Choose a project to load",
-						"Load Project", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
-				if ((p != null)) {
-					board.setActive(p);
-					this.pack();
-					this.revalidate();
-					this.repaint();
-				}
-			} else {
-				JOptionPane.showMessageDialog(null, "No projects to load");
-			}
+			loadProject();
 		});
 		menu.add(menuItem);
 
@@ -110,12 +111,7 @@ public class MainScreen extends JFrame {
 		menuItem = new JMenuItem("Edit Project");
 		menuItem.getAccessibleContext().setAccessibleDescription("Edit a project");
 		menuItem.addActionListener((event) -> {
-			if (board.getActive() == null) {
-				JOptionPane.showMessageDialog(null, "Create a Project First");
-			} else {
-				ProjectModel p = ProjectView.showEditDialog(board, board.getActive());
-				board.getActive().setAs(p);
-			}
+			editProject();
 		});
 		menu.add(menuItem);
 
@@ -126,26 +122,14 @@ public class MainScreen extends JFrame {
 		// Creates a task to the active project
 		menuItem = new JMenuItem("Create Task");
 		menuItem.addActionListener((event) -> {
-			if (board.getActive() == null) {
-				JOptionPane.showMessageDialog(null, "Create a Project First");
-			} else {
-				TaskModel t = TaskView.showCreateDialog(board.getActive());
-				board.getActive().addTask(t);
-			}
+			createTask();
 		});
 		menu.add(menuItem);
 
 		// Edits a task from the active project TODO:
 		menuItem = new JMenuItem("Edit Task");
 		menuItem.addActionListener((event) -> {
-			if (board.getActive() == null || board.getActive().getTasks().size() <= 0) {
-				JOptionPane.showMessageDialog(null, "Create a Task First");
-			} else {
-				// TaskModel t = TaskView.showCreateDialog(board.getActive());
-				// // TODO: Add the task to the ProjectModel
-				// board.getActive().addTask(t);
-				// System.out.println(t);
-			}
+			editTask();
 		});
 		menu.add(menuItem);
 
@@ -174,6 +158,115 @@ public class MainScreen extends JFrame {
 		LoginView.showLoginDialog();
 	}
 
+	private boolean savePrompt() {
+		Object[] options = { "Save", "Don't Save", "Cancel" };
+		String title = board.getFileName();
+		if (title == null)
+			title = "untitled";
+		int n = JOptionPane.showOptionDialog(frame, title + " has unsaved changes. What would you like to do?",
+				"Unsaved Changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options,
+				options[2]);
+		if (n == 2)
+			return false;
+		if (n == 0)
+			save();
+		return true;
+	}
+
+	private void updateSaveStatus(boolean to) {
+		unsaved = to;
+		String title = frame.getTitle();
+		int ind = title.lastIndexOf("*");
+
+		if (unsaved) {
+			if (ind < 0)
+				frame.setTitle(frame.getTitle() + "*");
+		} else {
+			if (ind > 0) {
+				title.substring(0, ind);
+			}
+			frame.setTitle(title);
+		}
+	}
+
+	private void newTaskBoard() {
+		frame.setTitle("Untitled");
+		updateSaveStatus(false);
+		board = new TaskBoardModel();
+	}
+
+	private void createProject() {
+		ProjectModel p = ProjectView.showCreateDialog(board);
+		if (p != null) {
+			updateSaveStatus(true);
+			board.addProject(p);
+		}
+	}
+
+	private void loadProject() {
+		Object[] choices = board.getProjects().toArray();
+		if (choices.length > 0) {
+			ProjectModel p = (ProjectModel) JOptionPane.showInputDialog(this, "Choose a project to load",
+					"Load Project", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+			if ((p != null)) {
+				board.setActive(p);
+				this.pack();
+				this.revalidate();
+				this.repaint();
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "No projects to load");
+		}
+	}
+
+	private void editProject() {
+		if (board.getActive() == null) {
+			JOptionPane.showMessageDialog(null, "Create a Project First");
+		} else {
+			ProjectModel p = ProjectView.showEditDialog(board, board.getActive());
+			updateSaveStatus(true);
+			board.getActive().setAs(p);
+		}
+	}
+
+	private void createTask() {
+		if (board.getActive() == null) {
+			JOptionPane.showMessageDialog(null, "Create a Project First");
+		} else {
+			TaskModel t = TaskView.showCreateDialog(board.getActive());
+			if (t != null) {
+				updateSaveStatus(true);
+				board.getActive().addTask(t);
+			}
+		}
+	}
+
+	private void editTask() {
+		if (board.getActive() == null || board.getActive().getTasks().size() <= 0) {
+			JOptionPane.showMessageDialog(null, "Create a Task First");
+		} else {
+
+			// Choose Task
+			Object[] choices = board.getActive().getTasks().toArray();
+			if (choices.length > 0) {
+				TaskModel t = (TaskModel) JOptionPane.showInputDialog(this, "Choose a task to edit", "Edit Task",
+						JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+				if ((t != null)) {
+					int index = board.getActive().getTasks().indexOf(t);
+
+					t = TaskView.showEditDialog(board.getActive(), t);
+					updateSaveStatus(true);
+					board.getActive().getTasks().set(index, t);
+					this.pack();
+					this.revalidate();
+					this.repaint();
+				}
+			} else {
+				JOptionPane.showMessageDialog(null, "No tasks to load");
+			}
+		}
+	}
+
 	/**
 	 * Opens file chooser prompt to open a TaskBoardModel
 	 */
@@ -193,10 +286,11 @@ public class MainScreen extends JFrame {
 	 * Saves TaskBoardModel if possible, else calls saveAs()
 	 */
 	private void save() {
-		if ("".equals(board.getFileName())) {
-
-		} else
+		if (board.getFileName() == null) {
 			saveAs();
+		} else {
+			saveXML(new File(board.getFileName()));
+		}
 	}
 
 	/**
@@ -210,11 +304,13 @@ public class MainScreen extends JFrame {
 		int ret = fc.showSaveDialog(this);
 		if (ret == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
+			// Append .xml
 			if (!file.getName().contains(".xml")) {
 				String ext = file.getAbsolutePath() + ".xml";
 				file = new File(ext);
 			}
 			saveXML(file);
+			board.setFileName(file.toString());
 		}
 	}
 
@@ -226,6 +322,9 @@ public class MainScreen extends JFrame {
 			XMLDecoder xmlIn = new XMLDecoder(new BufferedInputStream(new FileInputStream(file)));
 			TaskBoardModel load = (TaskBoardModel) xmlIn.readObject();
 			xmlIn.close();
+
+			frame.setTitle(file.getName());
+			updateSaveStatus(false);
 			JOptionPane.showMessageDialog(this, "Loaded " + file);
 			return load;
 		} catch (IOException e) {
@@ -240,10 +339,13 @@ public class MainScreen extends JFrame {
 	 */
 	private void saveXML(File file) {
 		try {
-			file.renameTo(new File(file.getName() + ".xml"));
+			file.renameTo(new File(file.getName()));
 			XMLEncoder xmlOut = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(file)));
 			xmlOut.writeObject(board);
 			xmlOut.close();
+
+			frame.setTitle(file.getName());
+			updateSaveStatus(false);
 			JOptionPane.showMessageDialog(this, "Saved " + file);
 		} catch (IOException e) {
 			e.printStackTrace();

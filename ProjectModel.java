@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ProjectModel {
@@ -6,15 +8,24 @@ public class ProjectModel {
 	private List<String> cols;
 	private List<TaskModel> tasks;
 	private static int instances = 1;
+	private static Comparator comp = new TaskComparator();
 
 	public ProjectModel(String name, ArrayList<String> cols) {
 		if ("".equals(name))
-			this.name = "project" + instances+1;
+			this.name = "project" + instances++;
 		else
 			this.name = name;
 		this.cols = new ArrayList<String>(cols);
 		this.tasks = new ArrayList<TaskModel>();
-		instances++;
+	}
+	
+	public ProjectModel(String name, ArrayList<String> cols, List<TaskModel> tasks) {
+		if ("".equals(name))
+			this.name = "project" + instances++;
+		else
+			this.name = name;
+		this.cols = new ArrayList<String>(cols);
+		this.tasks = new ArrayList<TaskModel>(tasks);
 	}
 
 	public ProjectModel(ProjectModel pm) {
@@ -29,8 +40,10 @@ public class ProjectModel {
 		this.tasks = new ArrayList<TaskModel>();
 	}
 
+	// TODO: SORT
 	public void addTask(TaskModel task) {
 		tasks.add(task);
+		Collections.sort(tasks, comp);
 	}
 
 	public void addColumn(String col) {
@@ -70,7 +83,7 @@ public class ProjectModel {
 	public void setTasks(List<TaskModel> tasks) {
 		this.tasks = tasks;
 	}
-	
+
 	public void setAs(ProjectModel pm) {
 		this.name = pm.name;
 		this.cols = pm.cols;

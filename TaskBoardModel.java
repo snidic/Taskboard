@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,6 @@ public class TaskBoardModel extends JPanel {
 	public TaskBoardModel() {
 		this.name = "";
 		projects = new ArrayList<ProjectModel>();
-		fileName = "";
 	}
 
 	public TaskBoardModel(TaskBoardModel tb) {

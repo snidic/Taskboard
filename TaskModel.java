@@ -1,6 +1,6 @@
 import java.util.Date;
 
-public class TaskModel implements Comparable {
+public class TaskModel {
 	private String name;
 	private String desc;
 	private Date due;
@@ -32,12 +32,6 @@ public class TaskModel implements Comparable {
 		this.desc = "";
 		this.due = null;
 		this.status = "";
-	}
-
-	@Override
-	public int compareTo(Object o) {
-		TaskModel other = (TaskModel) o;
-		return due.compareTo(other.due);
 	}
 
 	public String getName() {

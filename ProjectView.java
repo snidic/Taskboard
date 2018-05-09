@@ -105,7 +105,10 @@ public class ProjectView extends JDialog {
 			} else if (cols.isEmpty()) {
 				addError("No Columns are added");
 			} else {
-				target = new ProjectModel(name.getText(), colsToString());
+				if (target == null)
+					target = new ProjectModel(name.getText(), colsToString());
+				else
+					target = new ProjectModel(name.getText(), colsToString(), target.getTasks());
 				this.dispose();
 			}
 		});
