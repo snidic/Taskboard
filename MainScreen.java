@@ -115,6 +115,13 @@ public class MainScreen extends JFrame {
 		});
 		menu.add(menuItem);
 
+		menuItem = new JMenuItem("Delete Project");
+		menuItem.getAccessibleContext().setAccessibleDescription("Deletes current project");
+		menuItem.addActionListener((event) -> {
+			deleteProject();
+		});
+		menu.add(menuItem);
+
 		/// Task Section ///
 		menu = new JMenu("Task");
 		menuBar.add(menu);
@@ -226,6 +233,25 @@ public class MainScreen extends JFrame {
 			ProjectModel p = ProjectView.showEditDialog(board, board.getActive());
 			updateSaveStatus(true);
 			board.getActive().setAs(p);
+		}
+	}
+
+	private void deleteProject() {
+		if (board.getActive() != null) {
+			Object[] options = { "Yes", "No" };
+			int n = JOptionPane.showOptionDialog(this, "Are you sure you wish to delete the current project?",
+					"Delete Project", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options,
+					options[1]);
+			if (n == 0) {
+				int index = board.getProjects().indexOf(board.getActive());
+				board.getProjects().remove(index);
+				board.setActive(null);
+				if (board.getProjects().size() > 0) {
+					loadProject();
+				}
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "No project loaded");
 		}
 	}
 
