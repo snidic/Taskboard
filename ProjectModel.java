@@ -18,7 +18,7 @@ public class ProjectModel {
 		this.cols = new ArrayList<String>(cols);
 		this.tasks = new ArrayList<TaskModel>();
 	}
-	
+
 	public ProjectModel(String name, ArrayList<String> cols, List<TaskModel> tasks) {
 		if ("".equals(name))
 			this.name = "project" + instances++;
@@ -50,6 +50,14 @@ public class ProjectModel {
 		if (cols.contains(col))
 			return;
 		cols.add(col);
+	}
+
+	public List<TaskModel> getTaskCol(String col) {
+		ArrayList<TaskModel> list = new ArrayList<>();
+		for (TaskModel t : tasks)
+			if (t.getStatus().equals(col))
+				list.add(t);
+		return list;
 	}
 
 	public String getName() {
@@ -91,7 +99,7 @@ public class ProjectModel {
 	}
 
 	public String toString() {
-		return this.getClass().getName() + "[Name: " + name + ",\n\tCols: " + cols.toString() + ",\n\tTasks:"
-				+ tasks.toString() + "]";
+		return this.getClass().getName() + " - " + name + " : " + cols.size() + " - "
+				+ tasks.size();
 	}
 }

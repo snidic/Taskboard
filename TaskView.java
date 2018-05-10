@@ -52,8 +52,8 @@ public class TaskView extends JDialog {
 		desc = new JTextField(20);
 		desc.setText(ts.getDesc());
 		col = new JComboBox(pr.getCols().toArray());
-		due = "";
-		due = ts.getDue().toString();
+		date = ts.getDue();
+		due = ts.dueToString();
 		nameNav = new JPanel();
 		descNav = new JPanel();
 		colNav = new JPanel();
@@ -116,7 +116,7 @@ public class TaskView extends JDialog {
 		});
 		dueNav.add(datePicker);
 		if (date != null)
-			due = date.toString();
+			due = TaskModel.dueToString(date);
 		else
 			due = "";
 		dueNav.add(new JLabel(due));

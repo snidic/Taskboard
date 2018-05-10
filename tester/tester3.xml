@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_131" class="java.beans.XMLDecoder">
+ <object class="TaskBoardModel" id="TaskBoardModel0">
+  <void property="active">
+   <object class="ProjectModel" id="ProjectModel0">
+    <void property="cols">
+     <void method="add">
+      <string>TODO</string>
+     </void>
+     <void method="add">
+      <string>CHECK</string>
+     </void>
+     <void method="add">
+      <string>FINISHED</string>
+     </void>
+     <void method="add">
+      <string>EXTRA</string>
+     </void>
+    </void>
+    <void property="name">
+     <string>Taskboard</string>
+    </void>
+    <void property="tasks">
+     <void method="add">
+      <object class="TaskModel">
+       <void property="due">
+        <object class="java.util.Date">
+         <long>1525878000170</long>
+        </object>
+       </void>
+       <void property="name">
+        <string>Presentation</string>
+       </void>
+       <void property="status">
+        <string>TODO</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="TaskModel">
+       <void property="desc">
+        <string>Make sure it works</string>
+       </void>
+       <void property="due">
+        <object class="java.util.Date">
+         <long>1526137200270</long>
+        </object>
+       </void>
+       <void property="name">
+        <string>save()</string>
+       </void>
+       <void property="status">
+        <string>CHECK</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="TaskModel">
+       <void property="due">
+        <object class="java.util.Date" id="Date0">
+         <long>9223372036854775807</long>
+        </object>
+       </void>
+       <void property="name">
+        <string>Colors</string>
+       </void>
+       <void property="status">
+        <string>EXTRA</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="TaskModel">
+       <void property="due">
+        <object idref="Date0"/>
+       </void>
+       <void property="name">
+        <string>Submission</string>
+       </void>
+       <void property="status">
+        <string>TODO</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="TaskModel">
+       <void property="due">
+        <object idref="Date0"/>
+       </void>
+       <void property="name">
+        <string>TaskModel</string>
+       </void>
+       <void property="status">
+        <string>FINISHED</string>
+       </void>
+      </object>
+     </void>
+     <void method="add">
+      <object class="TaskModel">
+       <void property="due">
+        <object idref="Date0"/>
+       </void>
+       <void property="name">
+        <string>TaskView</string>
+       </void>
+       <void property="status">
+        <string>FINISHED</string>
+       </void>
+      </object>
+     </void>
+    </void>
+   </object>
+  </void>
+  <void property="fileName">
+   <string>D:\Stuff 2\Programs\Workspace\TaskBoard\src\tester3.xml</string>
+  </void>
+  <void property="projects">
+   <void method="add">
+    <object idref="ProjectModel0"/>
+   </void>
+   <void method="add">
+    <object class="ProjectModel" id="ProjectModel1">
+     <void property="cols">
+      <void method="add">
+       <string>TODO</string>
+      </void>
+      <void method="add">
+       <string>FINISHED</string>
+      </void>
+     </void>
+     <void property="name">
+      <string>Clock</string>
+     </void>
+     <void property="tasks">
+      <void method="add">
+       <object class="TaskModel">
+        <void property="due">
+         <object class="java.util.Date">
+          <long>9223372036854775807</long>
+         </object>
+        </void>
+        <void property="name">
+         <string>dummy</string>
+        </void>
+        <void property="status">
+         <string>TODO</string>
+        </void>
+       </object>
+      </void>
+     </void>
+    </object>
+   </void>
+  </void>
+ </object>
+</java>

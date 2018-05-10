@@ -128,7 +128,7 @@ public class CalendarView extends JDialog {
 
 		String str = "";
 		if (target != null)
-			str = target.toString();
+			str = TaskModel.dueToString(target);
 		JLabel targetDate = new JLabel(str);
 
 		confirmNav.add(accept);

@@ -81,9 +81,24 @@ public class TaskModel {
 		this.status = tm.status;
 	}
 
+	public static String dueToString(Date d) {
+		String str = "";
+		if (d == null || d.equals(CalendarView.ENDLESS))
+			return str;
+		String[] contents = d.toString().split(" ");
+		return contents[2] + "/" + contents[1] + "/" + contents[contents.length - 1];
+	}
+
+	public String dueToString() {
+		String str = "";
+		if (due == null || due.equals(CalendarView.ENDLESS))
+			return str;
+		String[] contents = due.toString().split(" ");
+		return contents[2] + "/" + contents[1] + "/" + contents[contents.length - 1];
+	}
+
 	public String toString() {
-		return this.getClass().getName() + "[Name: " + name + " , Desc: " + desc + ", Due: " + due.toString()
-				+ ", Status: " + status + "]";
+		return this.getClass().getName() + " - " + name + " : " + status + " :: " + dueToString();
 	}
 
 }

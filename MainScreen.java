@@ -1,5 +1,7 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.XMLDecoder;
@@ -25,6 +27,7 @@ public class MainScreen extends JFrame {
 	JPanel topNav = new JPanel(new FlowLayout());
 	JMenuBar menuBar = new JMenuBar();
 	TaskBoardModel board = new TaskBoardModel();
+	TaskBoardView view = new TaskBoardView();
 	boolean unsaved = false;
 
 	/**
@@ -133,23 +136,61 @@ public class MainScreen extends JFrame {
 		});
 		menu.add(menuItem);
 
-		// Edits a task from the active project TODO:
+		// Edits a task from the active project
 		menuItem = new JMenuItem("Edit Task");
 		menuItem.addActionListener((event) -> {
 			editTask();
 		});
 		menu.add(menuItem);
 
-		// TODO: REMOVE
-		menu = new JMenu("DEBUG");
-		menuBar.add(menu);
-		menuItem = new JMenuItem("Print Taskboard");
+		menuItem = new JMenuItem("Delete Task");
 		menuItem.addActionListener((event) -> {
-			System.out.println(board);
+			deleteTask();
 		});
 		menu.add(menuItem);
 
+		// TODO: REMOVE
+		// menu = new JMenu("DEBUG");
+		// menuBar.add(menu);
+		// menuItem = new JMenuItem("Print Taskboard");
+		// menuItem.addActionListener((event) -> {
+		// System.out.println(board);
+		// });
+		// menu.add(menuItem);
+
 		frame.setJMenuBar(menuBar);
+	}
+
+	private void showButtons() {
+		JPanel buttonNav = new JPanel();
+		buttonNav.setLayout(new BoxLayout(buttonNav, BoxLayout.LINE_AXIS));
+		buttonNav.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+		JButton button = new JButton("Load Project");
+		button.addActionListener((event) -> {
+			loadProject();
+		});
+		buttonNav.add(button);
+
+		button = new JButton("Edit Project");
+		button.addActionListener((event) -> {
+			editProject();
+		});
+		buttonNav.add(button);
+
+		button = new JButton("Create Task");
+		button.addActionListener((event) -> {
+			createTask();
+		});
+		buttonNav.add(button);
+
+		button = new JButton("Edit Task");
+		button.addActionListener((event) -> {
+			editTask();
+		});
+		buttonNav.add(button);
+
+		frame.add(buttonNav);
 	}
 
 	/**
@@ -157,12 +198,34 @@ public class MainScreen extends JFrame {
 	 */
 	public void showScreen() {
 		showMenuBar();
+		showButtons();
 
+		frame.add(view);
+
+		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.PAGE_AXIS));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		LoginView.showLoginDialog();
+	}
+
+	private void updateFrame() {
+		frame.pack();
+		frame.revalidate();
+		frame.repaint();
+	}
+
+	private void updateView() {
+		view.removeAll();
+		view.draw();
+		view.revalidate();
+		updateFrame();
+	}
+
+	private void loadView(ProjectModel pr) {
+		view.setProject(pr);
+		updateView();
 	}
 
 	private boolean savePrompt() {
@@ -180,7 +243,7 @@ public class MainScreen extends JFrame {
 		return true;
 	}
 
-	private void updateSaveStatus(boolean to) {
+	private void setUnsaved(boolean to) {
 		unsaved = to;
 		String title = frame.getTitle();
 		int ind = title.lastIndexOf("*");
@@ -198,15 +261,18 @@ public class MainScreen extends JFrame {
 
 	private void newTaskBoard() {
 		frame.setTitle("Untitled");
-		updateSaveStatus(false);
+		setUnsaved(false);
 		board = new TaskBoardModel();
+		loadView(board.getActive());
 	}
 
 	private void createProject() {
 		ProjectModel p = ProjectView.showCreateDialog(board);
 		if (p != null) {
-			updateSaveStatus(true);
+			setUnsaved(true);
 			board.addProject(p);
+			board.setActive(p);
+			loadView(board.getActive());
 		}
 	}
 
@@ -217,9 +283,8 @@ public class MainScreen extends JFrame {
 					"Load Project", JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
 			if ((p != null)) {
 				board.setActive(p);
-				this.pack();
-				this.revalidate();
-				this.repaint();
+				updateFrame();
+				loadView(p);
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, "No projects to load");
@@ -231,8 +296,9 @@ public class MainScreen extends JFrame {
 			JOptionPane.showMessageDialog(null, "Create a Project First");
 		} else {
 			ProjectModel p = ProjectView.showEditDialog(board, board.getActive());
-			updateSaveStatus(true);
+			setUnsaved(true);
 			board.getActive().setAs(p);
+			loadView(p);
 		}
 	}
 
@@ -246,6 +312,7 @@ public class MainScreen extends JFrame {
 				int index = board.getProjects().indexOf(board.getActive());
 				board.getProjects().remove(index);
 				board.setActive(null);
+				loadView(board.getActive());
 				if (board.getProjects().size() > 0) {
 					loadProject();
 				}
@@ -261,8 +328,9 @@ public class MainScreen extends JFrame {
 		} else {
 			TaskModel t = TaskView.showCreateDialog(board.getActive());
 			if (t != null) {
-				updateSaveStatus(true);
+				setUnsaved(true);
 				board.getActive().addTask(t);
+				updateView();
 			}
 		}
 	}
@@ -281,11 +349,39 @@ public class MainScreen extends JFrame {
 					int index = board.getActive().getTasks().indexOf(t);
 
 					t = TaskView.showEditDialog(board.getActive(), t);
-					updateSaveStatus(true);
+					setUnsaved(true);
 					board.getActive().getTasks().set(index, t);
-					this.pack();
-					this.revalidate();
-					this.repaint();
+					updateFrame();
+					updateView();
+				}
+			} else {
+				JOptionPane.showMessageDialog(null, "No tasks to load");
+			}
+		}
+	}
+
+	private void deleteTask() {
+		if (board.getActive() == null || board.getActive().getTasks().size() <= 0) {
+			JOptionPane.showMessageDialog(null, "No tasks to delete");
+		} else {
+
+			// Choose Task
+			Object[] choices = board.getActive().getTasks().toArray();
+			if (choices.length > 0) {
+				TaskModel t = (TaskModel) JOptionPane.showInputDialog(this, "Choose a task to delete", "Delete Task",
+						JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+				if ((t != null)) {
+
+					Object[] options = { "Yes", "No" };
+					int n = JOptionPane.showOptionDialog(this, "Are you sure you wish to delete the selected task?",
+							"Delete Project", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
+							options, options[1]);
+					if (n == 0) {
+						int index = board.getActive().getTasks().indexOf(t);
+						board.getActive().getTasks().remove(index);
+						setUnsaved(true);
+						updateView();
+					}
 				}
 			} else {
 				JOptionPane.showMessageDialog(null, "No tasks to load");
@@ -305,6 +401,8 @@ public class MainScreen extends JFrame {
 		if (ret == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
 			board = openXML(file);
+			board.setFileName(file.toString());	// Set path to opened path
+			loadView(board.getActive());
 		}
 	}
 
@@ -335,8 +433,8 @@ public class MainScreen extends JFrame {
 				String ext = file.getAbsolutePath() + ".xml";
 				file = new File(ext);
 			}
-			saveXML(file);
 			board.setFileName(file.toString());
+			saveXML(file);
 		}
 	}
 
@@ -350,7 +448,7 @@ public class MainScreen extends JFrame {
 			xmlIn.close();
 
 			frame.setTitle(file.getName());
-			updateSaveStatus(false);
+			setUnsaved(false);
 			JOptionPane.showMessageDialog(this, "Loaded " + file);
 			return load;
 		} catch (IOException e) {
@@ -371,7 +469,7 @@ public class MainScreen extends JFrame {
 			xmlOut.close();
 
 			frame.setTitle(file.getName());
-			updateSaveStatus(false);
+			setUnsaved(false);
 			JOptionPane.showMessageDialog(this, "Saved " + file);
 		} catch (IOException e) {
 			e.printStackTrace();
