@@ -99,7 +99,6 @@ public class ProjectModel {
 	}
 
 	public String toString() {
-		return this.getClass().getName() + " - " + name + " : " + cols.size() + " - "
-				+ tasks.size();
+		return name + " : " + cols.size() + " - " + tasks.size();
 	}
 }

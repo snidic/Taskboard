@@ -20,6 +20,14 @@
     <void property="tasks">
      <void method="add">
       <object class="TaskModel">
+       <void property="col">
+        <object class="java.awt.Color">
+         <int>255</int>
+         <int>255</int>
+         <int>255</int>
+         <int>255</int>
+        </object>
+       </void>
        <void property="due">
         <object class="java.util.Date">
          <long>1526137200322</long>
@@ -50,8 +58,13 @@
      </void>
      <void method="add">
       <object class="TaskModel">
+       <void property="desc">
+        <string>desc</string>
+       </void>
        <void property="due">
-        <object idref="Date0"/>
+        <object class="java.util.Date">
+         <long>1527692400768</long>
+        </object>
        </void>
        <void property="name">
         <string>Color</string>
@@ -87,11 +100,34 @@
        </void>
       </object>
      </void>
+     <void method="add">
+      <object class="TaskModel">
+       <void property="col">
+        <object class="java.awt.Color">
+         <int>0</int>
+         <int>102</int>
+         <int>102</int>
+         <int>255</int>
+        </object>
+       </void>
+       <void property="due">
+        <object class="java.util.Date">
+         <long>1527606000250</long>
+        </object>
+       </void>
+       <void property="name">
+        <string>task1</string>
+       </void>
+       <void property="status">
+        <string>CHECK</string>
+       </void>
+      </object>
+     </void>
     </void>
    </object>
   </void>
   <void property="fileName">
-   <string>D:\Stuff 2\Programs\Workspace\TaskBoard\src\tester\tester3.xml</string>
+   <string>D:\Stuff 2\Programs\Workspace\TaskBoard\src\tester\tester4.xml</string>
   </void>
   <void property="projects">
    <void method="add">

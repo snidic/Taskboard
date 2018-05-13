@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.Date;
 
 public class TaskModel {
@@ -5,9 +6,10 @@ public class TaskModel {
 	private String desc;
 	private Date due;
 	private String status;
+	private Color col;
 	private static int instances = 1;
 
-	public TaskModel(String name, String desc, Date due, Object status) {
+	public TaskModel(String name, String desc, Date due, Object status, Color col) {
 		if ("".equals(name))
 			this.name = "task" + instances++;
 		else
@@ -18,6 +20,7 @@ public class TaskModel {
 			this.status = (String) status;
 		else
 			this.status = "";
+		this.col = col;
 	}
 
 	public TaskModel(TaskModel tm) {
@@ -25,6 +28,7 @@ public class TaskModel {
 		this.desc = tm.desc;
 		this.due = tm.due;
 		this.status = tm.status;
+		this.col = tm.col;
 	}
 
 	public TaskModel() {
@@ -32,6 +36,7 @@ public class TaskModel {
 		this.desc = "";
 		this.due = null;
 		this.status = "";
+		this.col = null;
 	}
 
 	public String getName() {
@@ -74,11 +79,20 @@ public class TaskModel {
 		this.status = status;
 	}
 
+	public Color getCol() {
+		return col;
+	}
+
+	public void setCol(Color col) {
+		this.col = col;
+	}
+
 	public void setAs(TaskModel tm) {
 		this.name = tm.name;
 		this.desc = tm.desc;
 		this.due = tm.due;
 		this.status = tm.status;
+		this.col = tm.col;
 	}
 
 	public static String dueToString(Date d) {
@@ -98,7 +112,7 @@ public class TaskModel {
 	}
 
 	public String toString() {
-		return this.getClass().getName() + " - " + name + " : " + status + " :: " + dueToString();
+		return name + " : " + status + " :: " + dueToString();
 	}
 
 }

@@ -149,15 +149,6 @@ public class MainScreen extends JFrame {
 		});
 		menu.add(menuItem);
 
-		// TODO: REMOVE
-		// menu = new JMenu("DEBUG");
-		// menuBar.add(menu);
-		// menuItem = new JMenuItem("Print Taskboard");
-		// menuItem.addActionListener((event) -> {
-		// System.out.println(board);
-		// });
-		// menu.add(menuItem);
-
 		frame.setJMenuBar(menuBar);
 	}
 
@@ -400,9 +391,13 @@ public class MainScreen extends JFrame {
 		int ret = fc.showOpenDialog(this);
 		if (ret == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
-			board = openXML(file);
-			board.setFileName(file.toString());	// Set path to opened path
-			loadView(board.getActive());
+			if (file.exists()) {
+				board = openXML(file);
+				board.setFileName(file.toString()); // Set path to opened path
+				loadView(board.getActive());
+			} else {
+				JOptionPane.showMessageDialog(this, "Unknown File Specified");
+			}
 		}
 	}
 
@@ -446,12 +441,11 @@ public class MainScreen extends JFrame {
 			XMLDecoder xmlIn = new XMLDecoder(new BufferedInputStream(new FileInputStream(file)));
 			TaskBoardModel load = (TaskBoardModel) xmlIn.readObject();
 			xmlIn.close();
-
 			frame.setTitle(file.getName());
 			setUnsaved(false);
 			JOptionPane.showMessageDialog(this, "Loaded " + file);
 			return load;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(this, "File Not Loaded: " + file);
 		}
@@ -463,7 +457,7 @@ public class MainScreen extends JFrame {
 	 */
 	private void saveXML(File file) {
 		try {
-			file.renameTo(new File(file.getName()));
+			file = new File(file.toString());
 			XMLEncoder xmlOut = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(file)));
 			xmlOut.writeObject(board);
 			xmlOut.close();

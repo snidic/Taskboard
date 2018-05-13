@@ -5,28 +5,25 @@
    <object class="ProjectModel" id="ProjectModel0">
     <void property="cols">
      <void method="add">
-      <string>dsa</string>
+      <string>asd</string>
      </void>
     </void>
     <void property="name">
-     <string>asd</string>
+     <string>dsa</string>
     </void>
     <void property="tasks">
      <void method="add">
       <object class="TaskModel">
-       <void property="desc">
-        <string>ddd</string>
-       </void>
        <void property="due">
         <object class="java.util.Date">
          <long>9223372036854775807</long>
         </object>
        </void>
        <void property="name">
-        <string>ddd</string>
+        <string>asd</string>
        </void>
        <void property="status">
-        <string>dsa</string>
+        <string>asd</string>
        </void>
       </object>
      </void>
@@ -34,7 +31,7 @@
    </object>
   </void>
   <void property="fileName">
-   <string>D:\Stuff 2\Programs\Workspace\TaskBoard\src\tester\tester.xml</string>
+   <string>D:\Stuff 2\Programs\Workspace\TaskBoard\src\tester\da.xml</string>
   </void>
   <void property="projects">
    <void method="add">

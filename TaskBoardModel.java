@@ -5,18 +5,15 @@ import java.util.List;
 import javax.swing.JPanel;
 
 public class TaskBoardModel extends JPanel {
-	private String name;
 	private List<ProjectModel> projects;
 	private String fileName;
 	private ProjectModel active;
 
 	public TaskBoardModel() {
-		this.name = "";
 		projects = new ArrayList<ProjectModel>();
 	}
 
 	public TaskBoardModel(TaskBoardModel tb) {
-		this.name = tb.name;
 		projects = tb.projects;
 		fileName = tb.fileName;
 		active = tb.active;
@@ -47,10 +44,6 @@ public class TaskBoardModel extends JPanel {
 		return false;
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public List<ProjectModel> getProjects() {
 		return projects;
 	}
@@ -63,9 +56,6 @@ public class TaskBoardModel extends JPanel {
 		return active;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public void setProjects(List<ProjectModel> projects) {
 		this.projects = projects;
@@ -80,7 +70,7 @@ public class TaskBoardModel extends JPanel {
 	}
 
 	public String toString() {
-		return this.getClass().getName() + "[Name: " + name + ",\n\tProjects: " + projects.toString()
+		return this.getClass().getName() + ",\n\tProjects: " + projects.toString()
 				+ ",\n\tFilename: " + fileName + ",\n\tActive: " + active + "]";
 	}
 }

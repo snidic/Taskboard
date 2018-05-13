@@ -41,13 +41,16 @@ public class TaskBoardView extends JPanel {
 
 			for (TaskModel t : pr.getTaskCol(s)) {
 				JPanel tPanel = new JPanel();
-				Color c = Color.LIGHT_GRAY;
+				Color c = t.getCol();
+				if (c == null)
+					c = Color.LIGHT_GRAY;
 				pane = BorderFactory.createMatteBorder(2, 2, 2, 2, c);
 				tPanel.setBackground(new Color(c.getRed(), c.getGreen(), c.getBlue(), 125));
 				tPanel.setOpaque(true);
 				tPanel.setLayout(new BoxLayout(tPanel, BoxLayout.PAGE_AXIS));
 				tPanel.setBorder(new CompoundBorder(pane, BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-				tPanel.add(new JLabel(t.getName()));
+				String title = "<HTML><U>" + t.getName() + "</U></HTML>";
+				tPanel.add(new JLabel(title));
 				tPanel.add(new JLabel(t.getDesc()));
 				tPanel.add(new JLabel(t.dueToString()));
 				col.add(tPanel);

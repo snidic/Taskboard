@@ -56,7 +56,7 @@
    </object>
   </void>
   <void property="fileName">
-   <string>D:\Stuff 2\Programs\Workspace\TaskBoard\tester2.xml</string>
+   <string>D:\Stuff 2\Programs\Workspace\TaskBoard\src\tester\tester2.xml</string>
   </void>
   <void property="projects">
    <void method="add">
